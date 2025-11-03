@@ -27,7 +27,7 @@ public class Application {
         int buyPrice;
         while (true) {
             try {
-                System.out.println("구입금액을 입력해주세요");
+                System.out.println(Message.INPUT_BUY_PRICE);
                 String buyPriceInput = Console.readLine();
                 buyPrice = getBuyPrice(buyPriceInput);
                 break;
@@ -44,13 +44,13 @@ public class Application {
         try {
             buyPrice = Integer.parseInt(buyPriceInput);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("로또구입 금액은 1,000원 단위의 양의 정수여야 합니다.");
+            throw new IllegalArgumentException(ErrorMessage.INVALID_PRICE.getMessage());
         }
         if (buyPrice <= 0) {
-            throw new IllegalArgumentException("로또구입 금액은 양수여야 합니다.");
+            throw new IllegalArgumentException(ErrorMessage.PRICE_NOT_POSITIVE.getMessage());
         }
         if (buyPrice % TICKET_PRICE != 0) {
-            throw new IllegalArgumentException("로또구입 금액은 1,000원 단위여야 합니다.");
+            throw new IllegalArgumentException(ErrorMessage.INVALID_PRICE_UNIT.getMessage());
         }
         return buyPrice;
     }

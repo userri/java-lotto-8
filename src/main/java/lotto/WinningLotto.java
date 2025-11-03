@@ -29,7 +29,7 @@ public class WinningLotto {
 
     private List<Integer> getInputNumbers() {
         List<Integer> winningNumbers;
-        System.out.println("당첨 번호를 입력해 주세요.");
+        System.out.println(Message.INPUT_WINNING_NUMBER);
         String winningNumbersInput = Console.readLine();
         winningNumbers = parseWinningNumbers(winningNumbersInput);
         return winningNumbers;
@@ -49,21 +49,21 @@ public class WinningLotto {
                     .sorted()
                     .boxed().toList();
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("쉼표로 구분된 6개의 양의 정수를 입력해주세요.");
+            throw new IllegalArgumentException(ErrorMessage.INVALID_WINNING_NUMBER.getMessage());
         }
         return winningNumbers;
     }
 
     private void validateCountOfNumbers(List<Integer> winningNumbers) {
         if (winningNumbers.size() != 6) {
-            throw new IllegalArgumentException("당첨 번호는 6개의 숫자여야 합니다.");
+            throw new IllegalArgumentException(ErrorMessage.INVALID_WINNING_NUMBER_COUNT.getMessage());
         }
     }
 
     private void validateRange(List<Integer> winningNumbers) {
         for (Integer i : winningNumbers) {
             if (i < 1 | i > 45) {
-                throw new IllegalArgumentException("당첨 번호는 1과 45사이의 숫자로 이루어져야 합니다.");
+                throw new IllegalArgumentException(ErrorMessage.INVALID_WINNING_NUMBER_RANGE.getMessage());
             }
         }
     }
@@ -74,7 +74,7 @@ public class WinningLotto {
                 .toList();
 
         if (winningNumbers.size() != distinctWinningNumbers.size()) {
-            throw new IllegalArgumentException("당첨 숫자는 중복이 없어야 합니다.");
+            throw new IllegalArgumentException(ErrorMessage.WINNING_NUMBER_DUPLICATE.getMessage());
         }
     }
 

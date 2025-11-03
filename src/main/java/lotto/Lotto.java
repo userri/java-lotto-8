@@ -3,6 +3,7 @@ package lotto;
 import java.util.List;
 
 public class Lotto {
+    private static final Integer LOTTO_COUNT = 6;
     private final List<Integer> numbers;
 
     public Lotto(List<Integer> numbers) {
@@ -10,26 +11,29 @@ public class Lotto {
         this.numbers = numbers;
     }
 
-    // TODO: 게터 지우도록 구현해야함
     public List<Integer> getNumbers() {
         return numbers;
     }
 
     private void validate(List<Integer> numbers) {
-        if (numbers.size() != 6) {
-            throw new IllegalArgumentException("[ERROR] 로또 번호는 6개여야 합니다.");
-        }
+        validateCount(numbers);
+        validateDuplicate(numbers);
+    }
+
+    private static void validateDuplicate(List<Integer> numbers) {
         for (Integer i : numbers) {
             List<Integer> distinctNumbers = numbers.stream()
                     .distinct()
                     .toList();
-
             if (numbers.size() != distinctNumbers.size()) {
-                throw new IllegalArgumentException("당첨 숫자는 중복이 없어야 합니다.");
+                throw new IllegalArgumentException(ErrorMessage.LOTTO_NUMBER_DUPLICATE.getMessage());
             }
         }
     }
 
-
-
+    private static void validateCount(List<Integer> numbers) {
+        if (numbers.size() != LOTTO_COUNT) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_LOTTO_COUNT.getMessage());
+        }
+    }
 }

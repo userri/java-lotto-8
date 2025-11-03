@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class LottoManager {
     private List<Lotto> lottos;
@@ -24,9 +25,7 @@ public class LottoManager {
     private List<Lotto> generateLottos(int ticketNumbersOfLottos) {
         List<Lotto> lottos = new ArrayList<>();
         for (int i = 0; i < ticketNumbersOfLottos; i++) {
-            List<Integer> lottoNumbers = generateLottoNumbers();
-            lottoNumbers = lottoNumbers.stream().sorted().toList();
-            Lotto lotto = new Lotto(lottoNumbers);
+            Lotto lotto = generateLottoWithNumber();
             lottos.add(lotto);
         }
         System.out.println();
@@ -34,8 +33,19 @@ public class LottoManager {
         return lottos;
     }
 
-    private List<Integer> generateLottoNumbers() {
-        return Randoms.pickUniqueNumbersInRange(1, 45, 6);
+    private Lotto generateLottoWithNumber() {
+        List<Integer> numbers = Randoms.pickUniqueNumbersInRange(1, 45, 6).stream().sorted().toList();
+        Lotto lotto;
+        while (true) {
+            try {
+                lotto = new Lotto(numbers);
+                break;
+            } catch (IllegalArgumentException e) {
+                Error error = new Error(e.getMessage());
+                error.printMessage();
+            }
+        }
+        return lotto;
     }
 
     public void printLottos() {
@@ -94,11 +104,11 @@ public class LottoManager {
 
     public void initWinningResults(HashMap<String, Integer> winningResults) {
         this.winningResults = new HashMap<>();
-        winningResults.put("1등", 0);
-        winningResults.put(Message.SECOND.getMessage(), 0);
-        winningResults.put("3등", 0);
-        winningResults.put(Message.FOURTH.getMessage(), 0);
-        winningResults.put(Message.FIFTH.getMessage(), 0);
+        winningResults.put(LottoRank.RANK1.getMessage(), 0);
+        winningResults.put(LottoRank.RANK2.getMessage(), 0);
+        winningResults.put(LottoRank.RANK3.getMessage(), 0);
+        winningResults.put(LottoRank.RANK4.getMessage(), 0);
+        winningResults.put(LottoRank.RANK5.getMessage(), 0);
     }
 
     public void countWinner() {
@@ -114,20 +124,20 @@ public class LottoManager {
     }
 
     private void addResult(Lotto i, List<Integer> intersection) {
-        if (intersection.size() == 3) {
-            winningResults.put(Message.FIFTH.getMessage(), winningResults.get(Message.FIFTH.getMessage()) + 1);
+        if (intersection.size() == LottoRank.RANK5.getCount()) {
+            winningResults.put(LottoRank.RANK5.getMessage(), winningResults.get(LottoRank.RANK5.getMessage()) + 1);
         }
-        if (intersection.size() == 4) {
-            winningResults.put(Message.FOURTH.getMessage(), winningResults.get(Message.FOURTH.getMessage()) + 1);
+        if (intersection.size() == LottoRank.RANK4.getCount()) {
+            winningResults.put(LottoRank.RANK4.getMessage(), winningResults.get(LottoRank.RANK4.getMessage()) + 1);
         }
-        if (intersection.size() == 5 && !i.getNumbers().contains(bonusNumber)) {
-            winningResults.put("3등", winningResults.get("3등") + 1);
+        if (intersection.size() == LottoRank.RANK3.getCount() && !i.getNumbers().contains(bonusNumber)) {
+            winningResults.put(LottoRank.RANK3.getMessage(), winningResults.get(LottoRank.RANK3.getMessage()) + 1);
         }
-        if (intersection.size() == 5 && i.getNumbers().contains(bonusNumber)) {
-            winningResults.put(Message.SECOND.getMessage(), winningResults.get(Message.SECOND.getMessage()) + 1);
+        if (intersection.size() == LottoRank.RANK2.getCount() && i.getNumbers().contains(bonusNumber)) {
+            winningResults.put(LottoRank.RANK2.getMessage(), winningResults.get(LottoRank.RANK2.getMessage()) + 1);
         }
-        if (intersection.size() == 6) {
-            winningResults.put("1등", winningResults.get("1등") + 1);
+        if (intersection.size() == LottoRank.RANK1.getCount()) {
+            winningResults.put(LottoRank.RANK1.getMessage(), winningResults.get(LottoRank.RANK1.getMessage()) + 1);
         }
     }
 
@@ -148,24 +158,24 @@ public class LottoManager {
         System.out.println("당첨 통계");
         System.out.println("---");
         System.out.print("3개 일치 (5,000원) - ");
-        System.out.println(winningResults.get(Message.FIFTH.getMessage()) + "개");
+        System.out.println(winningResults.get(LottoRank.RANK5.getMessage()) + "개");
         System.out.print("4개 일치 (50,000원) - ");
-        System.out.println(winningResults.get(Message.FOURTH.getMessage()) + "개");
+        System.out.println(winningResults.get(LottoRank.RANK4.getMessage()) + "개");
         System.out.print("5개 일치 (1,500,000원) - ");
-        System.out.println(winningResults.get(Message.THIRD.getMessage()) + "개");
+        System.out.println(winningResults.get(LottoRank.RANK3.getMessage()) + "개");
         System.out.print("5개 일치, 보너스 볼 일치 (30,000,000원) - ");
-        System.out.println(winningResults.get(Message.SECOND.getMessage()) + "개");
+        System.out.println(winningResults.get(LottoRank.RANK2.getMessage()) + "개");
         System.out.print("6개 일치 (2,000,000,000원) - ");
-        System.out.println(winningResults.get(Message.FIRST.getMessage()) + "개");
+        System.out.println(winningResults.get(LottoRank.RANK1.getMessage()) + "개");
     }
 
     private int getTotalPrize() {
         int totalPrize = 0;
-        totalPrize = winningResults.get(Message.FIFTH.getMessage()) * 5000
-                + winningResults.get(Message.FOURTH.getMessage()) * 50000
-                + winningResults.get(Message.THIRD.getMessage()) * 1500000
-                + winningResults.get(Message.SECOND.getMessage()) * 30000000
-                + winningResults.get(Message.FIRST.getMessage()) * 2000000000;
+        totalPrize = winningResults.get(LottoRank.RANK5.getMessage()) * 5000
+                + winningResults.get(LottoRank.RANK4.getMessage()) * 50000
+                + winningResults.get(LottoRank.RANK3.getMessage()) * 1500000
+                + winningResults.get(LottoRank.RANK2.getMessage()) * 30000000
+                + winningResults.get(LottoRank.RANK1.getMessage()) * 2000000000;
         return totalPrize;
     }
 
