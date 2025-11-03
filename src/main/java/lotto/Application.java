@@ -16,8 +16,7 @@ public class Application {
         lottoManager.printLottos();
         lottoManager.initWinning();
 
-        HashMap<String, Integer> winningResults = new HashMap<>();
-        lottoManager.initWinningResults(winningResults);
+        lottoManager.initWinningResults();
 
         lottoManager.countWinner();
         lottoManager.getResults(buyPrice);

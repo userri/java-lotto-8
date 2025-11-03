@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class LottoManager {
     private List<Lotto> lottos;
@@ -102,7 +101,7 @@ public class LottoManager {
         }
     }
 
-    public void initWinningResults(HashMap<String, Integer> winningResults) {
+    public void initWinningResults() {
         this.winningResults = new HashMap<>();
         winningResults.put(LottoRank.RANK1.getMessage(), 0);
         winningResults.put(LottoRank.RANK2.getMessage(), 0);
