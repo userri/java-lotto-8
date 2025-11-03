@@ -209,6 +209,7 @@ public class Application {
         }
     }
 
+    // 로또 클래스 안에 넣음
     private static void validateDistinctWinningNumbers(List<Integer> winningNumbers) {
         List<Integer> distinctWinningNumbers = winningNumbers.stream()
                 .distinct()

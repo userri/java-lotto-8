@@ -19,6 +19,15 @@ public class Lotto {
         if (numbers.size() != 6) {
             throw new IllegalArgumentException("[ERROR] 로또 번호는 6개여야 합니다.");
         }
+        for (Integer i : numbers) {
+            List<Integer> distinctNumbers = numbers.stream()
+                    .distinct()
+                    .toList();
+
+            if (numbers.size() != distinctNumbers.size()) {
+                throw new IllegalArgumentException("당첨 숫자는 중복이 없어야 합니다.");
+            }
+        }
     }
 
     // TODO: 추가 기능 구현
