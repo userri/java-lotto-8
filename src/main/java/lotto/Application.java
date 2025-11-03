@@ -2,9 +2,6 @@ package lotto;
 
 import camp.nextstep.edu.missionutils.Console;
 
-import java.util.*;
-
-
 public class Application {
     public static int TICKET_PRICE = 1000;
 
@@ -15,9 +12,7 @@ public class Application {
         LottoManager lottoManager = new LottoManager(ticketNumbersOfLottos);
         lottoManager.printLottos();
         lottoManager.initWinning();
-
         lottoManager.initWinningResults();
-
         lottoManager.countWinner();
         lottoManager.getResults(buyPrice);
     }
@@ -53,5 +48,4 @@ public class Application {
         }
         return buyPrice;
     }
-
 }

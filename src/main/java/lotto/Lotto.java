@@ -11,10 +11,6 @@ public class Lotto {
         this.numbers = numbers;
     }
 
-    public List<Integer> getNumbers() {
-        return numbers;
-    }
-
     private void validate(List<Integer> numbers) {
         validateCount(numbers);
         validateDuplicate(numbers);
@@ -35,5 +31,9 @@ public class Lotto {
         if (numbers.size() != LOTTO_COUNT) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_LOTTO_COUNT.getMessage());
         }
+    }
+
+    public List<Integer> getNumbers() {
+        return numbers;
     }
 }

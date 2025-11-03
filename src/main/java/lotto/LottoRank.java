@@ -5,11 +5,16 @@ public enum LottoRank {
     RANK2("3등", 30000000, 5),
     RANK3("3등", 1500000, 5),
     RANK4("4등", 50000, 4),
-    RANK5("5등", 5000, 3)
-    ;
+    RANK5("5등", 5000, 3);
     private String message;
     private Integer prize;
     private Integer count;
+
+    LottoRank(String message, Integer prize, Integer count) {
+        this.message = message;
+        this.prize = prize;
+        this.count = count;
+    }
 
     public Integer getCount() {
         return count;
@@ -17,11 +22,5 @@ public enum LottoRank {
 
     public String getMessage() {
         return message;
-    }
-
-    LottoRank(String message, Integer prize, Integer count) {
-        this.message = message;
-        this.prize = prize;
-        this.count = count;
     }
 }

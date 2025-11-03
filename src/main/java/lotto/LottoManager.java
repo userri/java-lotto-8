@@ -12,9 +12,7 @@ import java.util.function.Predicate;
 public class LottoManager {
     private List<Lotto> lottos;
     private WinningLotto winningLotto = null;
-
     private Integer bonusNumber = 0;
-
     private Map<String, Integer> winningResults = null;
 
     public LottoManager(int ticketNumberOfLottos) {
@@ -142,9 +140,7 @@ public class LottoManager {
 
     public void getResults(Integer buyPrice) {
         printMatchingResults();
-
         int totalPrize = getTotalPrize();
-
         printProfitRate(buyPrice, totalPrize);
     }
 

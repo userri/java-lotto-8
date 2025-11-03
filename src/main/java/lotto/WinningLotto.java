@@ -72,7 +72,6 @@ public class WinningLotto {
         List<Integer> distinctWinningNumbers = winningNumbers.stream()
                 .distinct()
                 .toList();
-
         if (winningNumbers.size() != distinctWinningNumbers.size()) {
             throw new IllegalArgumentException(ErrorMessage.WINNING_NUMBER_DUPLICATE.getMessage());
         }
