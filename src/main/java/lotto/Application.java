@@ -9,20 +9,25 @@ import java.util.*;
 public class Application {
     public static int TICKET_PRICE = 1000;
     public static int NUMBERS_COUNT_IN_LOTTO = 6;
+    public static int ERROR_ITR = 100;
 
     public static void main(String[] args) {
-        int buyPrice;
+        int buyPrice = 0;
+        int errorCount = 0;
         while (true) {
             try {
                 System.out.println("구입금액을 입력해주세요");
                 String buyPriceString = Console.readLine();
                 buyPrice = getBuyPrice(buyPriceString);
+                break;
             } catch (IllegalArgumentException e) {
                 Error error = new Error(e.getMessage());
                 error.printMessage();
-                continue;
+                errorCount++;
+                if (errorCount > ERROR_ITR) {
+                    break;
+                }
             }
-            break;
         }
         int ticketNumbersOfLottos = buyPrice / TICKET_PRICE;
         List<Lotto> lottos = generateLottos(ticketNumbersOfLottos);
@@ -31,9 +36,10 @@ public class Application {
         printLottos(lottos);
 
         List<Integer> winningNumbers = new ArrayList<>();
+        errorCount = 0;
         while (true) {
             try {
-                System.out.println("\n당첨 번호를 입력해 주세요.");
+                System.out.println("당첨 번호를 입력해 주세요.");
                 String winningNumbersString = Console.readLine();
                 winningNumbers = getWinningNumbers(winningNumbersString);
                 validateCountOfWinningNumbers(winningNumbers);
@@ -43,15 +49,20 @@ public class Application {
             } catch (IllegalArgumentException e) {
                 Error error = new Error(e.getMessage());
                 error.printMessage();
+                errorCount++;
+                if (errorCount > ERROR_ITR) {
+                    break;
+                }
             }
         }
 
 
         String bonusNumberString;
         int bonusNumber = 0;
+        errorCount = 0;
         while (true) {
             try {
-                System.out.println("\n보너스 번호를 입력해주세요");
+                System.out.println("보너스 번호를 입력해주세요");
                 bonusNumberString = Console.readLine();
                 bonusNumber = getBonusNumber(bonusNumberString);
                 validateRangeOfBonusNumber(bonusNumber);
@@ -60,6 +71,10 @@ public class Application {
             } catch (IllegalArgumentException e) {
                 Error error = new Error(e.getMessage());
                 error.printMessage();
+                errorCount++;
+                if (errorCount > ERROR_ITR) {
+                    break;
+                }
             }
         }
 
@@ -106,26 +121,26 @@ public class Application {
 
         System.out.println("당첨 통계");
         System.out.println("---");
-        System.out.print("3개 일치 (5,000)원 - ");
+        System.out.print("3개 일치 (5,000원) - ");
         System.out.println(winningResults.get("5등") + "개");
-        System.out.print("4개 일치 (50,000)원 - ");
+        System.out.print("4개 일치 (50,000원) - ");
         System.out.println(winningResults.get("4등") + "개");
-        System.out.print("5개 일치 (1,500,000)원 - ");
+        System.out.print("5개 일치 (1,500,000원) - ");
         System.out.println(winningResults.get("3등") + "개");
-        System.out.print("5개 일치, 보너스 볼 일치 (30,000,000)원 - ");
+        System.out.print("5개 일치, 보너스 볼 일치 (30,000,000원) - ");
         System.out.println(winningResults.get("2등") + "개");
-        System.out.print("6개 일치 (2,000,000,000)원 - ");
+        System.out.print("6개 일치 (2,000,000,000원) - ");
         System.out.println(winningResults.get("1등") + "개");
 
         int totalPrize = 0;
-        totalPrize = winningResults.get("5등") * 3000
+        totalPrize = winningResults.get("5등") * 5000
                 + winningResults.get("4등") * 50000
                 + winningResults.get("3등") * 1500000
                 + winningResults.get("2등") * 30000000
                 + winningResults.get("1등") * 2000000000;
 
         double profitRate = (double) totalPrize / buyPrice * 100;
-        System.out.printf("총 수익률은 %.1f %%입니다.\n", profitRate);
+        System.out.printf("총 수익률은 %.1f%%입니다.\n", profitRate);
 
     }
 
@@ -225,7 +240,7 @@ public class Application {
         for (int i = 0; i < ticketNumbersOfLottos; i++) {
             List<Integer> lottoNumbers = generateLottoNumbers();
             // 정렬 후 보내야 함
-            lottoNumbers.sort(Comparator.naturalOrder());
+            lottoNumbers = lottoNumbers.stream().sorted().toList();
             Lotto lotto = new Lotto(lottoNumbers);
             lottos.add(lotto);
         }
@@ -233,14 +248,6 @@ public class Application {
     }
 
     private static List<Integer> generateLottoNumbers() {
-        List<Integer> lottoNumbers = new ArrayList<>();
-
-        while (lottoNumbers.size() < NUMBERS_COUNT_IN_LOTTO) {
-            int lottoNumber = Randoms.pickNumberInRange(1, 45);
-            if (!lottoNumbers.contains(lottoNumber)) {
-                lottoNumbers.add(lottoNumber);
-            }
-        }
-        return lottoNumbers;
+        return Randoms.pickUniqueNumbersInRange(1, 45, 6);
     }
 }
